@@ -1,0 +1,4 @@
+@font-face {
+    font-family: Gotham Rounded;
+    src: url('../styles/fonts/Gotham\ Rounded\ Bold.otf') format('woff'), url('../styles/fonts/Gotham\ Rounded\ Medium.otf') format('woff2');
+}
