@@ -3,6 +3,7 @@ import "../src/styles/app.css";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import React from "react";
+import RecipeEdit from "./Components/RecipeEdit";
 const sampleRecipes = [
   {
     id: 1,
@@ -47,6 +48,7 @@ const sampleRecipes = [
 export const RecipeContext = React.createContext();
 
 function App() {
+  const [selectedRecipeId, setSelectedRecipeId] = useState()
   const [recipes, setRecipes] = useState(()=> {
     const recipeJSON = localStorage.getItem('recipes')
     if(recipeJSON!=null) {
@@ -56,34 +58,49 @@ function App() {
       return sampleRecipes
     }
   });
+  const selectedRecipe = recipes.find(recipe => recipe.id === selectedRecipeId)
 
   useEffect(()=> {
     localStorage.setItem('recipes', JSON.stringify(recipes))
   }, [recipes])
 
 
-  const recipeContextValue = { handleRecipeAdd, handleRecipeDelete };
+  const recipeContextValue = { handleRecipeAdd, handleRecipeDelete, handleRecipeSelect, handleRecipeChange};
 
   function handleRecipeAdd() {
     const newRecipe = {
       id: uuidv4(),
-      name: "new",
+      name: "",
       servings: 1,
-      cooktime: "1:00",
-      instructions: "instruc",
+      cooktime: "",
+      instructions: "",
       ingredients: [
         {
           id: uuidv4(),
-          name: "name",
-          amount: "1 tbs",
+          name: "",
+          amount: "",
         },
       ],
     };
+    setSelectedRecipeId(newRecipe.id)
     setRecipes([...recipes, newRecipe]);
   }
 
   function handleRecipeDelete(id) {
+    if(selectedRecipeId!=null && selectedRecipeId==id){
+      setSelectedRecipeId(undefined)
+    }
     setRecipes(recipes.filter((recipe) => recipe.id !== id));
+  }
+
+  function handleRecipeSelect(id){
+    setSelectedRecipeId(id)
+  }
+  function handleRecipeChange(id, recipe){
+    const newRecipes = [...recipes]
+    const index = newRecipes.findIndex(r => r.id === id)
+    newRecipes[index] = recipe
+    setRecipes(newRecipes)
   }
 
   return (
@@ -91,6 +108,7 @@ function App() {
       <RecipeList
         recipes={recipes}
       />
+       {selectedRecipe && <RecipeEdit recipe={selectedRecipe}/>}
     </RecipeContext.Provider>
   );
 }
