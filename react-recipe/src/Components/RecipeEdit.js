@@ -23,7 +23,7 @@ export default function RecipeEdit({recipe}) {
         handleChange({ingredients : [...recipe.ingredients, newIngredient]})
     }
     function handleIngredientDelete(id){
-        const newIngredientList = recipe.ingredients.filter(i => i.id != id)
+        const newIngredientList = recipe.ingredients.filter(i => i.id !== id)
         handleChange({ingredients : newIngredientList})
     }
   return (
