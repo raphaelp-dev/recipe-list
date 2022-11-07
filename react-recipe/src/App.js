@@ -48,24 +48,29 @@ const sampleRecipes = [
 export const RecipeContext = React.createContext();
 
 function App() {
-  const [selectedRecipeId, setSelectedRecipeId] = useState()
-  const [recipes, setRecipes] = useState(()=> {
-    const recipeJSON = localStorage.getItem('recipes')
-    if(recipeJSON!=null) {
-      return JSON.parse(recipeJSON)
-    }
-    else{
-      return sampleRecipes
+  const [selectedRecipeId, setSelectedRecipeId] = useState();
+  const [recipes, setRecipes] = useState(() => {
+    const recipeJSON = localStorage.getItem("recipes");
+    if (recipeJSON != null) {
+      return JSON.parse(recipeJSON);
+    } else {
+      return sampleRecipes;
     }
   });
-  const selectedRecipe = recipes.find(recipe => recipe.id === selectedRecipeId)
+  const selectedRecipe = recipes.find(
+    (recipe) => recipe.id === selectedRecipeId
+  );
 
-  useEffect(()=> {
-    localStorage.setItem('recipes', JSON.stringify(recipes))
-  }, [recipes])
+  useEffect(() => {
+    localStorage.setItem("recipes", JSON.stringify(recipes));
+  }, [recipes]);
 
-
-  const recipeContextValue = { handleRecipeAdd, handleRecipeDelete, handleRecipeSelect, handleRecipeChange};
+  const recipeContextValue = {
+    handleRecipeAdd,
+    handleRecipeDelete,
+    handleRecipeSelect,
+    handleRecipeChange,
+  };
 
   function handleRecipeAdd() {
     const newRecipe = {
@@ -82,33 +87,31 @@ function App() {
         },
       ],
     };
-    setSelectedRecipeId(newRecipe.id)
+    setSelectedRecipeId(newRecipe.id);
     setRecipes([...recipes, newRecipe]);
   }
 
   function handleRecipeDelete(id) {
-    if(selectedRecipeId!=null && selectedRecipeId===id){
-      setSelectedRecipeId(undefined)
+    if (selectedRecipeId != null && selectedRecipeId === id) {
+      setSelectedRecipeId(undefined);
     }
     setRecipes(recipes.filter((recipe) => recipe.id !== id));
   }
 
-  function handleRecipeSelect(id){
-    setSelectedRecipeId(id)
+  function handleRecipeSelect(id) {
+    setSelectedRecipeId(id);
   }
-  function handleRecipeChange(id, recipe){
-    const newRecipes = [...recipes]
-    const index = newRecipes.findIndex(r => r.id === id)
-    newRecipes[index] = recipe
-    setRecipes(newRecipes)
+  function handleRecipeChange(id, recipe) {
+    const newRecipes = [...recipes];
+    const index = newRecipes.findIndex((r) => r.id === id);
+    newRecipes[index] = recipe;
+    setRecipes(newRecipes);
   }
 
   return (
     <RecipeContext.Provider value={recipeContextValue}>
-      <RecipeList
-        recipes={recipes}
-      />
-       {selectedRecipe && <RecipeEdit recipe={selectedRecipe}/>}
+      <RecipeList recipes={recipes} />
+      {selectedRecipe && <RecipeEdit recipe={selectedRecipe} />}
     </RecipeContext.Provider>
   );
 }
